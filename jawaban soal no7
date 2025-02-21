@@ -1,0 +1,96 @@
+Jawaban Untuk soal no 7
+
+1. Untuk mengambil data dari API yang mengembalikan JSON, 
+   saya dapat menggunakan package net/http untuk melakukan HTTP request 
+   dan encoding/json untuk mendekode response JSON.
+
+Penjelasan:
+Menggunakan http.Get() untuk mengambil data dari API.
+Menggunakan ioutil.ReadAll() untuk membaca response body.
+Menggunakan json.Unmarshal() untuk mengubah JSON menjadi struct Go.
+Mengembalikan struct yang telah diisi dengan data dari API.
+
+2. Mengatasi Masalah Performa di Aplikasi Golang
+# Jika ada laporan masalah performa, langkah-langkah berikut yang saya dapat digunakan untuk menganalisis dan memperbaikinya:
+  1.Langkah-langkah debugging dan optimasi:
+    Gunakan Profiling Tool
+    Golang memiliki tools bawaan seperti pprof untuk melihat konsumsi CPU dan memori: go tool pprof http://localhost:8080/debug/pprof/profile
+    Bisa juga menggunakan package runtime/pprof untuk menambahkan profiling langsung dalam kode.
+  2.Analisis Penggunaan Memori dan Goroutine
+    - Gunakan runtime.MemStats untuk melihat alokasi memori.
+    - Periksa penggunaan goroutine dengan runtime.NumGoroutine().
+  3.Optimasi Database Query
+    - Pastikan indeks sudah digunakan dengan benar.
+    - Gunakan connection pooling (misalnya dengan github.com/jackc/pgx untuk PostgreSQL).
+    - Hindari query berulang yang tidak perlu.
+  4.Caching Data
+    - Gunakan Redis atau memcached untuk menyimpan data yang sering diakses.
+    - Gunakan sync.Map untuk caching di dalam aplikasi.
+  5.Gunakan Worker Pool untuk Goroutine
+    -Jika aplikasi menggunakan banyak goroutine tanpa kontrol, bisa menyebabkan goroutine leak. Gunakan worker pool untuk membatasi jumlah goroutine yang berjalan.
+  6.Gunakan Buffered Channel untuk Komunikasi Antar-Goroutine
+    - Jika ada bottleneck dalam komunikasi antar-goroutine, gunakan buffered channel agar tidak terjadi blocking.
+  7.Gunakan Load Testing
+    - Gunakan tools seperti wrk atau k6 untuk melakukan uji beban pada API.
+      wrk -t12 -c400 -d30s http://localhost:8080
+    - t12 = 12 thread
+    - c400 = 400 concurrent users
+    - d30s = dijalankan selama 30 detik
+  8.Gunakan Golang Compiler 
+    - Optimizations
+    - Pastikan aplikasi dibangun dengan flag optimasi: sh, Copy, Edit
+
+3. Membangun Aplikasi Backend dengan Golang
+   Untuk membangun aplikasi backend dengan Golang, kita dapat menggunakan framework seperti Fiber atau Gin untuk menangani HTTP request.
+   Langkah-langkah Pengembangan Backend dengan Golang
+   1. Persiapan Proyek
+      mkdir myapp && cd myapp
+         go mod init myapp
+         go get github.com/gofiber/fiber/v2
+   2. Membuat HTTP Server dengan Fiber
+      
+            package main
+
+            import (
+               "github.com/gofiber/fiber/v2"
+            )
+
+            func main() {
+               app := fiber.New()
+
+               // Route GET /
+               app.Get("/", func(c *fiber.Ctx) error {
+                  return c.JSON(fiber.Map{"message": "Hello, Golang Backend!"})
+               })
+
+               // Route GET /user/:id
+               app.Get("/user/:id", func(c *fiber.Ctx) error {
+                  id := c.Params("id")
+                  return c.JSON(fiber.Map{"user_id": id})
+               })
+
+               // Jalankan server pada port 8080
+               app.Listen(":8080")
+            }
+
+
+      Cara Menjalankan: go run main.go
+
+
+3. Hal yang Perlu Diperhatikan dalam Pengembangan Backend
+
+      - Validasi Input: Gunakan github.com/go-playground/validator/v10 untuk memvalidasi request.
+      - Error Handling: Pastikan error ditangani dengan baik dan gunakan middleware untuk menangani error.
+      - Security: Gunakan JWT untuk autentikasi (github.com/golang-jwt/jwt/v4).
+      - Logging: Gunakan logrus atau zap untuk logging.
+      - Database: Gunakan PostgreSQL/MySQL dengan gorm.io/gorm untuk ORM.
+      - Deployment: Gunakan Docker untuk mempermudah deployment.
+
+
+
+
+
+Kesimpulan
+   - Mengambil data JSON dari API: Gunakan http.Get() dan json.Unmarshal() untuk parsing JSON.
+   - Menemukan dan memperbaiki masalah performa: Gunakan pprof, optimalkan query database, gunakan caching, dan load testing.
+   - Membangun backend dengan Golang: Gunakan Fiber atau Gin, perhatikan validasi, error handling, security, dan optimasi performa.
